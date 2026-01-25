@@ -134,16 +134,23 @@ chmod +x examples/highmiss_loop
   --args "5 5 20000"
 ```
 
-Customization / Research Use
+## Modify / Extend (Alder Lake events)
+If you want to collect different hardware events on **Intel Alder Lake**, use Intel’s official event reference and update the perf event mappings:
 
+- Event reference (Alder Lake P-core): [Intel PerfMon Events – Alder Lake P-core](https://perfmon-events.intel.com/platforms/alderlake/core-events/p-core/#p-core-events)
+- Edit the event configuration in:
+  - `source/perf_backend.h`
+  - `source/perf_backend.c`
+
+After updating the event list/mappings, rebuild:
+```bash
+./scripts/monitor_script.sh build
+```
+
+## Customization / Research Use
 This project is intended to be modified:
-
-    Add/replace events in source/perf_backend.c/.h for new CPUs
-    Extend the dataset schema for new features
-    Add new workloads under examples/ for validation
-
-
-
-
+- Add/replace events in `source/perf_backend.c/.h` for new CPUs
+- Extend the dataset schema for new features
+- Add new workloads under `examples/` for validation
 
 
