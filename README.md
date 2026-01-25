@@ -4,7 +4,7 @@
 OpenPerfML is an **open-source C-based toolkit** designed to monitor and extract low level system performance metrics across diverse platforms.  
 
 
-> **NOTE:** This project is currently under active development and will be updated periodically.  
+> **Status:** Active Development. Verified on Linux / Intel 12th Gen (Alder Lake).
 > Feel free to **modify, adapt, and extend** the codebase to your needs.
 
 ---
@@ -30,7 +30,19 @@ Performance counter values and derived ratios used by OpenPerfML have been **ver
 OpenPerfML uses hardware events such as `CPU_CLK_UNHALTED.THREAD` (see `source/perf_backend.h/.c`) alongside additional counters to derive features like IPC/CPI and cache/memory stall ratios.
 
 ---
-
+## Project Structure 
+```text
+OpenPerfML/
+├── source/
+│   ├── libmonitor.c       # Main injection logic & thread tracking
+│   ├── monitor.h          # Feature extraction definitions
+│   └── perf_backend.c     # Linux perf_event_open syscall wrappers
+├── scripts/
+│   └── monitor_script.sh  # Build & orchestration automation
+└── examples/
+    └── highmiss_loop.c    # Synthetic workload for validation
+```
+---
 ## What It Does
 OpenPerfML provides the building blocks for analyzing and classifying system-level performance data.  
 It enables feature collection and can be extended to feed machine learning pipelines, rule-based systems, monitoring dashboards and more.
@@ -56,7 +68,15 @@ OpenPerfML is designed to work without modifying the target workload. It relies 
 - intercepts `clone()` (where applicable) to detect additional thread creation paths
 - runs a lightweight monitoring loop that samples at a configurable interval
 - supports per-thread aggregation and process-level feature output
-
+```mermaid
+graph TD;
+    TargetApp[Target Application] -->|LD_PRELOAD| LibMonitor[libmonitor.so];
+    LibMonitor -->|Interception| Pthread[pthread_create / clone];
+    LibMonitor -->|Sampling Loop| PerfBackend[Perf Backend];
+    PerfBackend -->|syscall: perf_event_open| Kernel[Linux Kernel PMU];
+    PerfBackend -->|Read Counters| HW[CPU Hardware Events];
+    LibMonitor -->|Log| CSV["Dataset (train.csv)"];
+```
 ---
 
 ## Modes: Observation vs Training
@@ -83,13 +103,44 @@ OpenPerfML supports two main workflows:
 - **Open-source and extensible** by design — feel free to edit and adapt
 
 ---
+## Collected Features (Dataset Schema)
+OpenPerfML aggregates raw hardware counters into **normalized ratios** per sampling window. These features are selected to characterize workload behavior (Compute vs. Memory vs. I/O) independent of execution time.
 
+The tool currently exports the following features (as defined in `PerformanceRatios`):
+
+| Feature | Description | Relevance |
+| :--- | :--- | :--- |
+| **IPC** | Instructions Per Cycle | General throughput metric (High = Compute Bound). |
+| **Cache Miss Ratio** | LLC Misses / Total Accesses | Indicates memory pressure / poor locality. |
+| **Uops/Cycle** | Micro-ops per Cycle | Pipeline utilization efficiency. |
+| **Mem Stall/Mem Inst** | Memory Stalls per Memory Instruction | Latency cost of memory operations. |
+| **Mem Stall/Inst** | Memory Stalls per Total Instruction | Global impact of memory latency. |
+| **Fault Rate** | Page Faults per Memory Instruction | Virtual memory pressure / trashing. |
+| **I/O Throughput** | Read/Write Bytes per Cycle | Disk/Network I/O intensity. |
+
+```c
+typedef struct {
+    double IPC;                         // Instructions Per Cycle
+    double Cache_Miss_Ratio;            // Last Level Cache Misses / References
+    double Uop_per_Cycle;               // Micro-operations retired per cycle
+    double MemStallCycle_per_Mem_Inst;  // Stall cycles due to loads / total loads
+    double MemStallCycle_per_Inst;      // Stall cycles due to memory / total instructions
+    double Fault_Rate_per_mem_instr;    // Page faults per memory access
+    double RChar_per_Cycle;             // I/O Read chars per cycle (syscalls)
+    double WChar_per_Cycle;             // I/O Write chars per cycle (syscalls)
+    double RBytes_per_Cycle;            // Disk Read bytes per cycle
+    double WBytes_per_Cycle;            // Disk Write bytes per cycle
+} PerformanceRatios;
+```
+> **Note:** Raw counters (cycles, instructions, cache references) are also available in the raw log output if needed.
+---
 ## Dependencies
 - Linux
 - GCC/Clang (C99)
 - `pthread`, `dl`
 - Access to Linux perf counters (may require permissions):
   - check `/proc/sys/kernel/perf_event_paranoid`
+  - Linux with perf_event_paranoid <= 1
 
 ---
 
