@@ -95,7 +95,7 @@ OpenPerfML supports two main workflows:
 
 ## Build & Run
 
-## Build the preload library
+#### Build the preload library
 ```bash
 ./scripts/monitor_script.sh build
 ```
