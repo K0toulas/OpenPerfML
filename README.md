@@ -2,7 +2,7 @@
 **Cross Platform Performance Feature Extraction Toolkit for Machine & Deep Learning**
 
 OpenPerfML is an **open-source C-based toolkit** designed to monitor and extract low level system performance metrics across diverse platforms.  
-It empowers the research and developer community to collect fine grained performance features for **machine learning, deep learning and systems analytics**.
+
 
 > **NOTE:** This project is currently under active development and will be updated periodically.  
 > Feel free to **modify, adapt, and extend** the codebase to your needs.
@@ -42,7 +42,7 @@ At a high level, OpenPerfML:
 - aggregates deltas per sampling window and derives features suitable for ML datasets
 
 ### Example Use Cases
-- Collecting compute, memory, and I/O traces for **ML model optimization**
+- Collecting compute, memory and I/O traces for **ML model optimization**
 - Monitoring performance features for **MLOps observability** and system health tracking
 - Providing datasets for **anomaly detection** or **intelligent resource management**
 - Implementing **rule-based inference systems** or lightweight **embedded ML analyzers**
