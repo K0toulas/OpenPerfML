@@ -38,6 +38,7 @@ typedef struct {
     ProcessIOStats io_delta;
     PerformanceRatios ratios;
     double exec_time_ms;
+    double dt_ms;
     double compute_prob_cjson;
     double io_prob_cjson;
     double memory_prob_cjson;
@@ -50,6 +51,7 @@ typedef struct {
     double compute_prob_onnx_2step;
     double io_prob_onnx_2step;
     double memory_prob_onnx_2step;
+
 } MonitorData;
 
 #endif

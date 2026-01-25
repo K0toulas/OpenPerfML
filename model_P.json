@@ -1,0 +1,39 @@
+{
+  "features": [
+    "cycles_per_ms",
+    "IPC",
+    "Cache_Miss_Ratio",
+    "MemStall_per_Mem",
+    "MemStall_per_Inst"
+  ],
+  "target": "inst_per_ms",
+  "intercept": -2553416.970636985,
+  "weights": {
+    "cycles_per_ms": 1.283862807351249,
+    "IPC": 1995455.8184723721,
+    "Cache_Miss_Ratio": -542766.1014512434,
+    "MemStall_per_Mem": -4073.2332965312917,
+    "MemStall_per_Inst": 30015.48214637864
+  },
+  "alpha": 1e-06,
+  "n_rows_total": 592,
+  "n_rows_train": 414,
+  "n_rows_test": 178,
+  "train": {
+    "rmse": 17222.081227105075,
+    "mae": 11025.452030781707,
+    "r2": 0.9984666634119556,
+    "corr": 0.9992330375903091
+  },
+  "test": {
+    "rmse": 13595.381019153125,
+    "mae": 9101.11382345551,
+    "r2": 0.9970182715342846,
+    "corr": 0.9991901028076096
+  },
+  "split": {
+    "warmup_windows": 5,
+    "train_frac": 0.7,
+    "method": "time_by_window_idx"
+  }
+}
