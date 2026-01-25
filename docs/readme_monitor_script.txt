@@ -88,10 +88,3 @@ This is equivalent to what the script configures internally:
   CORESET="0-15" \
   taskset -c 0-15 ./examples/highmiss_loop 5 5 20000
 
-----------------------------------------------------------------------
-Removed / deprecated parts
-----------------------------------------------------------------------
-
-The following were part of older experiments and are no longer included:
-- Python scripts: fit_models.py, parse_scheduler_log.py, parse_sched_eval.py
-- scheduler build/run instructions (scheduler.c is not part of this repo anymore)
