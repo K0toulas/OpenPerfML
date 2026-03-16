@@ -94,7 +94,6 @@ OpenPerfML supports two main workflows:
 ---
 
 ## Key Features
-- **Written in C**
 - **Modular architecture**
   - `source/libmonitor.c` + `source/monitor.h`: monitoring + feature extraction (`LD_PRELOAD`)
   - `source/perf_backend.c/.h`: Linux perf backend (`perf_event_open`)
